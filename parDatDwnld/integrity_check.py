@@ -7,6 +7,7 @@ import csv
 import configparser
 import argparse
 import subprocess
+import time
 
 
             
@@ -76,7 +77,7 @@ for db_path in glob.glob(f"{db_root_path}/*/*/datarepo/data/timeseries.sqlite"):
     station_db = sqlite3.connect(db_path)
     station_cur = station_db.cursor()
     
-    
+    station_sum = []
     try:
         station_sum = station_cur.execute("SELECT * FROM tsindex_summary;").fetchall()
         #print(station_sum)
@@ -85,7 +86,7 @@ for db_path in glob.glob(f"{db_root_path}/*/*/datarepo/data/timeseries.sqlite"):
         #db_tsindex_sum.to_csv(f'{meta_root_path}/download_sum.csv', mode = "a", sep = ",", index = False, header = False, na_rep = "None")
     except:
         with open(f'{meta_root_path}/sum_fail.txt',"a+") as f:
-            f.write(f'{network} {station} \n')
+            f.write(f'{db_path} \n')
     for row in station_sum:
             network, station, location, channel, earliest,latest, updt = row
             #print(network, station, location, channel, earliest,latest, updt)
@@ -97,6 +98,7 @@ for db_path in glob.glob(f"{db_root_path}/*/*/datarepo/data/timeseries.sqlite"):
                 values(?,?,?,?,?,?,?);
                 """, (network, station, location, channel, earliest,latest, updt))
     integrity = intergrity_check(network, station, "*", db_root_path, start, end)
+    time.sleep(1)
     sum_cur.execute("""
                 replace into integrity_summary
                 values(?,?,?);
@@ -112,8 +114,8 @@ download_summary = pd.read_sql_query("SELECT * FROM download_summary", conn)
 download_summary.to_csv(f"{meta_root_path}/download_summary.csv",index=False)
 subprocess.run(f"chgrp tolugboj_lab {meta_root_path}/download_summary.csv", shell=True, check=True)
 
-integrity_summary = pd.read_sql_query("SELECT * FROM integrity_summary", conn)
-integrity_summary.to_csv(f"{meta_root_path}/integrity_summary.csv",index=False)
-subprocess.run(f"chgrp tolugboj_lab {meta_root_path}/integrity_summary.csv", shell=True, check=True)
+#integrity_summary = pd.read_sql_query("SELECT * FROM integrity_summary", conn)
+#integrity_summary.to_csv(f"{meta_root_path}/integrity_summary.csv",index=False)
+#subprocess.run(f"chgrp tolugboj_lab {meta_root_path}/integrity_summary.csv", shell=True, check=True)
 conn.close()
 
