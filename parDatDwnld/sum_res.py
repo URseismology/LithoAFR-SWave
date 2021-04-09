@@ -8,6 +8,9 @@ import configparser
 import argparse
 import subprocess
 
+"""
+Extract the meta data from a specific station by reading its timeseries.sqlite
+"""
 def gen_meta_data(network, station, db_root_path, meta_root_path, start, end):
 
     if not os.path.exists(meta_root_path):
@@ -26,6 +29,7 @@ def gen_meta_data(network, station, db_root_path, meta_root_path, start, end):
     if not os.path.exists(f'{meta_root_path}/download_meta'):
         os.makedirs(f'{meta_root_path}/download_meta')
     db_tesindex.to_csv(f'{meta_root_path}/download_meta/{network}-{station}.csv', index=False)
+    subprocess.run(f"chgrp tolugboj_lab {meta_root_path}/download_meta/{network}-{station}.csv", shell=True, check=True)
 
 config = configparser.ConfigParser()
 config.read('config.ini')

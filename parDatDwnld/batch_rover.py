@@ -4,7 +4,14 @@ import pandas as pd
 import csv
 import configparser
 
-
+"""
+Generate a script that set up download job for a single station:
+1. allocate bluehive resource
+2. Initialize database if it does not exists
+3. Download
+4. Extract summary database
+5. send email
+"""
 def gen_single_job(root_path, network, station, 
                 start, end, src_path, email, manager_file):
     job_name = '{}-{}'.format(network, station)
@@ -43,7 +50,9 @@ def gen_single_job(root_path, network, station,
    
     manager_file.write('cd {} && sbatch job\n'.format(job_path))
     
-
+"""
+Generate a script that manage all single jobs
+"""
 def gen_manager(db_root_path, network_station_path, src_path,
                 start, end, email):
     if not os.path.exists(db_root_path):
