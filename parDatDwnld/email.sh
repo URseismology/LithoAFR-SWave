@@ -1,5 +1,5 @@
 #!/bin/bash
-
+echo start
  network=$1
  station=$2
  timeStamp=`date +%F`
@@ -23,6 +23,6 @@ $OUTPUT
 
 ========================================================================
 EOF
-
+echo end
 
 

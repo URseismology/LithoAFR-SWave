@@ -35,7 +35,8 @@ def gen_single_job(root_path, network, station,
         f.write(f'cd {src_path}\n')
         f.write(f'python3 {src_path}/sum_res.py -n {network} -s {station}\n')
         f.write(f'chgrp -R tolugboj_lab .\n')
-        f.write(f'{src_path}/email.sh {network} {station} {email}')
+        if email:
+            f.write(f'{src_path}/email.sh {network} {station} {email}')
 
     st = os.stat(run_script_name)
     os.chmod(run_script_name, st.st_mode | stat.S_IEXEC)
