@@ -2,6 +2,7 @@
 1. Set the config to make sure those arguments are what you want​
 2. Run batch_rover.py​
 3. Go to root path of database and run ./launch​
+4. Run intergrity_check.py to create a summary 
 
 # Data Migration
 Use the following code to copy data from BlueHive to Terravibranium
